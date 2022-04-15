@@ -4,11 +4,18 @@
 
 # TODOS
 
-- [ ] Share repo
-- [ ] Find a way to share data (too big for github)
 - [ ] Organize work
-- [ ] Replace .csv filed with .parquet (and possibly delete unnecessary data)
 - [ ] Write small tmux cheat sheet
+
+
+---
+
+## Done
+
+- [x] Find a way to share data (too big for github)
+  - Convert to parquet and split in chunks
+- [x] Replace .csv filed with .parquet (and possibly delete unnecessary data)
+- [x] Share repo
 
 ---
 
