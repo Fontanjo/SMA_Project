@@ -1,3 +1,5 @@
 # Data folder, too big for github
+Data/*
 
-Data/
+# Make an exception for the description file
+!Data/data.md
