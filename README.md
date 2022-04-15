@@ -7,7 +7,7 @@
 - [ ] Share repo
 - [ ] Find a way to share data (too big for github)
 - [ ] Organize work
-
+- [ ] Replace .csv filed with .parquet (and possibly delete unnecessary data)
 
 ---
 
