@@ -1,5 +1,5 @@
-# Data folder, too big for github
-Data/*
+# (Data folder, too big for github) -> solved by splitting data
+# Data/*
 
 # Make an exception for the description file
-!Data/data.md
+# !Data/data.md
