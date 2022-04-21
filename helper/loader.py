@@ -13,9 +13,9 @@ def load_ratings():
     except Exception as e:
         print('Error in changing working directory, data might not be loaded correctly')
     # Load first part
-    ratings_data_reduced0 = pd.read_parquet('../mubi_ratings_data_0.parquet')
+    ratings_data_reduced0 = pd.read_parquet('../data/mubi_ratings_data_0.parquet')
     # Load second part
-    ratings_data_reduceda = pd.read_parquet('../mubi_ratings_data_1.parquet')
+    ratings_data_reduced1 = pd.read_parquet('../data/mubi_ratings_data_1.parquet')
     # Merge data
     ratings_data = pd.concat([ratings_data_reduced0, ratings_data_reduced1])
     # Restore original working directory
@@ -35,7 +35,7 @@ def load_movies():
     except Exception as e:
         print('Error in changing working directory, data might not be loaded correctly')
     # Load data
-    movie_data = pd.read_parquet('../mubi_movie_data.parquet')
+    movie_data = pd.read_parquet('../data/mubi_movie_data.parquet')
     # Restore original working directory
     os.chdir(current_wd)
     # Return DataFrame
@@ -53,7 +53,7 @@ def load_lists():
     except Exception as e:
         print('Error in changing working directory, data might not be loaded correctly')
     # Load data
-    list_data = pd.read_parquet('../mubi_lists_data.parquet')
+    list_data = pd.read_parquet('../data/mubi_lists_data.parquet')
     # Restore original working directory
     os.chdir(current_wd)
     # Return DataFrame
