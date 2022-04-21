@@ -43,7 +43,7 @@ Dataset choosen: https://www.kaggle.com/datasets/clementmsika/mubi-sqlite-databa
 
 - [ ] **Todo**: Describe what and why was removed (useless columns)  
 - [ ] **Todo**: Create methods to upload data  
-- [ ] **Todo**: Preprocess data: remove users with very few ratings
+- [x] **Todo**: Preprocess data: remove users with very few ratings
 - [ ] **Todo**: Preprocess data: anomaly detection (possibly in combination with pca)
 
 

@@ -24,6 +24,6 @@ def more_than_N_ratings(ratings : pd.DataFrame, n : int) -> list:
     # Get the users with more than n ratings
     has_more = ratings.groupby('user_id')['user_id'].count() > n
     # Select the users to keep
-    users_to_keep = ratings['user_id'].unique()[has_more]
+    users_to_keep = has_more[has_more].index
     # Return list of users to keep
     return users_to_keep
