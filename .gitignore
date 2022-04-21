@@ -3,3 +3,6 @@
 
 # Make an exception for the description file
 # !Data/data.md
+
+# Ignore jupyter notebook checkpoints
+.ipynb_checkpoints/
