@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 
-def load_ratings():
+def load_ratings() -> pd.DataFrame:
     # Save current working directory to restore at the end (TODO check if necessary)
     current_wd = os.getcwd()
     # Move working directory tho this file location
@@ -24,7 +24,7 @@ def load_ratings():
     return ratings_data
 
 
-def load_movies():
+def load_movies() -> pd.DataFrame:
     # Save current working directory to restore at the end (TODO check if necessary)
     current_wd = os.getcwd()
     # Move working directory tho this file location
@@ -42,7 +42,7 @@ def load_movies():
     return movie_data
 
 
-def load_lists():
+def load_lists() -> pd.DataFrame:
     # Save current working directory to restore at the end (TODO check if necessary)
     current_wd = os.getcwd()
     # Move working directory tho this file location
