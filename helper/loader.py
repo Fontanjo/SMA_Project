@@ -58,3 +58,26 @@ def load_lists() -> pd.DataFrame:
     os.chdir(current_wd)
     # Return DataFrame
     return list_data
+
+
+def load_corr() -> pd.DataFrame:
+    # Save current working directory to restore at the end (TODO check if necessary)
+    current_wd = os.getcwd()
+    # Move working directory tho this file location
+    try:
+        abspath = os.path.abspath(__file__)
+        dname = os.path.dirname(abspath)
+        os.chdir(dname)
+    except Exception as e:
+        print('Error in changing working directory, data might not be loaded correctly')
+    # Load data
+    corr_0 = pd.read_parquet('../data/user_user_corr_0.parquet')
+    corr_1 = pd.read_parquet('../data/user_user_corr_1.parquet')
+    corr_2 = pd.read_parquet('../data/user_user_corr_2.parquet')
+    corr_3 = pd.read_parquet('../data/user_user_corr_3.parquet')
+
+    corr_data = pd.concat([corr_0,corr_1,corr_2,corr_3])
+    # Restore original working directory
+    os.chdir(current_wd)
+    # Return DataFrame
+    return corr_data
