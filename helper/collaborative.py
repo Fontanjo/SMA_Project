@@ -248,16 +248,19 @@ def predict_value(user : int, item : int, weights : pd.DataFrame, user_item_matr
 
 # TODO: main bottleneck so far, to improve
 
-# WARNING switch between predict_all and predict_all_norm for different implementation of the weights
 
 def predict_all(user : int, weights : pd.DataFrame, user_item_matrix : pd.DataFrame, average_ratings : pd.Series, norm : boolean) -> np.array:
 
     #iterate over all missing ratings for a user, and for each, compute the prediction
     prediction = []
 
-    for i in tqdm(range(user_item_matrix.shape[1])):
+    #Only predict movies when at least 5 users in the neighboorhod gave a ratings
 
-        movie = user_item_matrix.columns[i]
+    missing_ratings = user_item_matrix.loc[weights.columns.values].isna().sum()
+
+    possible_index = missing_ratings[missing_ratings <= (weights.shape[1] - 5)]
+
+    for movie in tqdm(possible_index.index.values):
         
         if np.isnan(user_item_matrix.loc[user,movie]):
 
@@ -279,7 +282,7 @@ def predict_all(user : int, weights : pd.DataFrame, user_item_matrix : pd.DataFr
 
 
 # Classic RS, the weights only considere the similarity between users
-
+# Can chose the normalized or not normalized formula
 def classic_RS(user : int, user_item_matrix : pd.DataFrame, neighboor_size = 50, top_K = 5,norm = False) -> np.array:
 
     similarity = get_k_dynamic_similar_users(user_item_matrix,user,neighboor_size)
