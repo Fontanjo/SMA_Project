@@ -114,18 +114,16 @@ def get_popularity(lists : pd.DataFrame, user_item_matrix : pd.DataFrame) -> pd.
     average = nbr_follower/nbr_lists
     average.index.name = None
 
-    #normalize the values
-    norm_average = ((average-average.min())/(average.max()-average.min()))
 
     #Add missing users
-    diff = user_item_matrix.index.difference(norm_average.index)
+    diff = user_item_matrix.index.difference(average.index)
 
     for index in diff:
-        norm_average[index] = 0
+        average[index] = 0
     
-    norm_average.sort_index(inplace=True)
+    average.sort_index(inplace=True)
 
-    popularity = norm_average.to_frame(name="popularity")
+    popularity = average.to_frame(name="popularity")
 
     return popularity
 
@@ -133,9 +131,15 @@ def get_popularity(lists : pd.DataFrame, user_item_matrix : pd.DataFrame) -> pd.
 # Given the general popularity matrix and a DataFrame of K similar users, return the equivalent popularity
 def get_k_popularity(popularity : pd.DataFrame, k_similar : pd.DataFrame) -> pd.DataFrame:
 
-    k_popu = popularity.loc[k_similar.columns.values.tolist()].transpose()
+    k_popu = popularity.loc[k_similar.columns.values.tolist()]
 
-    return k_popu
+    # Normalize only across the neighboorhod
+    # So our most popular friend will always be 1, even if really low in the general setting
+
+    norm_popu = ((k_popu-k_popu.min())/(k_popu.max()-k_popu.min())).fillna(0)
+
+
+    return norm_popu.transpose()
 
 
 #####################################
