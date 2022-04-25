@@ -1,4 +1,5 @@
 import pandas as pd
+from faker import Faker
 
 
 # Helper file to preprocess the data
@@ -27,3 +28,13 @@ def more_than_N_ratings(ratings : pd.DataFrame, n : int) -> list:
     users_to_keep = has_more[has_more].index
     # Return list of users to keep
     return users_to_keep
+
+
+# Create a (random) name for each user id
+def create_fake_identities(ids : list):
+    # Object to generate fake elements
+    fake = Faker()
+    # Generate dictionary matching ids to (fake) names
+    dir = {id: fake.name() for id in ids}
+    # Return the new dictionary
+    return dir
