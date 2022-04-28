@@ -8,7 +8,7 @@ from tqdm import tqdm
 # PROBLEM: Sometime, U and V starts containing NaN after a while... No idea why
 
 
-def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500):
+def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500, nb_batch=100000):
     """
     :param R: user(row)-item(column) matrix. R similar to UxV^T
     :param K: number of features
@@ -32,14 +32,9 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500):
     # Get indices of elements
     indices_full = R.nonzero()
 
-    # Consider only a part
-    # start = np.random.randint(len(indices[0]) - 1000)
-    # indices = [indices[0][start:start+1000], indices[1][start:start+1000]]
-
-
-    nb_batch = 10000
 
     for current_iter in range(max_iter):
+        # Consider only a part
         start = np.random.randint(len(indices_full[0]) - nb_batch)
         indices = [indices_full[0][start:start+nb_batch], indices_full[1][start:start+nb_batch]]
         for i,j in tqdm(zip(indices[0], indices[1])):
