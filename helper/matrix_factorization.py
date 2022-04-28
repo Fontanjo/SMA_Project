@@ -52,7 +52,8 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500):
         print('before second loop')
         for i,j in tqdm(zip(indices[0], indices[1])):
             print('in second loop')
-            error += 0.5*(R[i,j] - np.dot(U, V.T)[i,j])**2  + np.linalg.norm(U)*(lambda_/2) + np.linalg.norm(V)*(lambda_/2)
+            error += 0.5*(R[i,j] - np.dot(U[i,:], V[j,:].T))**2  + np.linalg.norm(U)*(lambda_/2) + np.linalg.norm(V)*(lambda_/2)
+
             counter = counter + 1
         print('after second loop')
 
