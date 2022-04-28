@@ -27,8 +27,8 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500):
     indices = R.nonzero()
 
     # Consider only a part
-    start = np.random.randint(len(indices[0]) - 1000)
-    indices = [indices[0][start:start+1000], indices[1][start:start+1000]]
+    # start = np.random.randint(len(indices[0]) - 1000)
+    # indices = [indices[0][start:start+1000], indices[1][start:start+1000]]
 
     iterator = zip(indices[0], indices[1])
 
