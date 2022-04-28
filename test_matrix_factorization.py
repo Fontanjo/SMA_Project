@@ -17,15 +17,19 @@ def main():
     # Load data
     ratings = load_ratings()
     lists = load_lists()
+    print('Data loaded')
 
     # Reduce data
     ratings_new, lists_new = preprocess_ratings(ratings, lists, min_ratings = 500)
-    
+    print('Data reduced')
+
+
     # Get (sparse) matrix
     sparse_user_item, _, _ = coll.get_sparse_user_item(ratings_new)
-    
+    print('User-Item matrix created')
+
     # Factorize (or try at least..) matrix
-    matrix_factorization(R=sparse_user_item, K=5, alpha=0.002, lambda_=0.02, max_iter=5)
+    matrix_factorization(R=sparse_user_item, K=5, alpha=0.002, lambda_=0.02, max_iter=10)
 
 
 
