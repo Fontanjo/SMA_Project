@@ -1,5 +1,8 @@
 import pandas as pd
 from faker import Faker
+import random
+from scipy.sparse import csr_matrix
+from tqdm import tqdm
 
 # Helper file to preprocess the data
 
@@ -37,3 +40,59 @@ def create_fake_identities(ids : list):
     dir = {id: fake.name() for id in ids}
     # Return the new dictionary
     return dir
+
+
+# Remove x% of the values from the sparse matrix and store them in a dictionary
+def prepare_test_data_sparse(user_item_matrix : csr_matrix, test_rate : float) -> (csr_matrix, dict):
+    # Create a copy
+    matrix = user_item_matrix.copy()
+    # Get the number of ratings
+    nb_ratings = len(user_item_matrix.nonzero()[0])
+    # Sanity check
+    assert test_rate >= 0, 'Test rate should be >= 0!'
+    assert test_rate < 1, 'Test rate should be < 1!'
+    # Get the number of ratings to remove
+    nb_to_remove = int(nb_ratings * test_rate)
+    # Get random indices to remove
+    to_remove = random.sample(range(nb_ratings), nb_to_remove)
+    # Get indices of elements
+    indices = user_item_matrix.nonzero()
+    # Store values
+    orig_vals = {}
+    # TODO test efficiency and possibly find a more efficient way
+    for i in tqdm(to_remove):
+        orig_vals[(indices[0][i], indices[1][i])] = matrix[indices[0][i], indices[1][i]]
+        matrix[indices[0][i], indices[1][i]] = 0
+    # Remove zero values from matrix
+    matrix.eliminate_zeros()
+    return matrix, orig_vals
+
+# Remove x% of the values from the DataFrame and store them in a dictionary
+def prepare_test_data_dense(user_item_matrix : pd.DataFrame, test_rate : float) -> (pd.DataFrame, dict):
+    # Create a copy
+    matrix = user_item_matrix.copy()
+    # Get the number of ratings
+    nb_ratings = sum(user_item_matrix.count())
+    # Sanity check
+    assert test_rate >= 0, 'Test rate should be >= 0!'
+    assert test_rate < 1, 'Test rate should be < 1!'
+    # Get the number of ratings to remove
+    nb_to_remove = int(nb_ratings * test_rate)
+    # Get random indices to remove
+    to_remove = random.sample(range(nb_ratings), nb_to_remove)
+    # Create temp matrix, with 0s instead of NaN
+    temp_u_i_m = matrix.fillna(0)
+    # Cast to sparse matrix, to get indices of elements
+    sparse_m = csr_matrix(temp_u_i_m.values)
+    # Remove NaN (now 0)
+    sparse_m.eliminate_zeros()
+    # Get indices of elements
+    indices = sparse_m.nonzero()
+    # Store values
+    orig_vals = {}
+    # TODO test efficiency and possibly find a more efficient way
+    for i in tqdm(to_remove):
+        orig_vals[(indices[0][i], indices[1][i])] = matrix.iloc[indices[0][i], indices[1][i]]
+        matrix.iloc[indices[0][i], indices[1][i]] = None
+    # Return df (useless since inplace) and dict
+    return matrix, orig_vals
