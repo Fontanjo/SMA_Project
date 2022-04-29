@@ -24,10 +24,10 @@ def main(args):
     sparse_user_item, _, _ = coll.get_sparse_user_item(ratings_new)
     print('User-Item matrix created')
 
-    K = args.K
+    K = int(args.K)
     alpha = args.alpha
     lambda_ = args.lambda_
-    max_iter = args.max_iter
+    max_iter = int(args.max_iter)
     nb_batch = args.nb_batch if args.nb_batch > 0 else 'all'
     plot_name = args.plot_name
     save_results = True if args.save_results == 'True' else False
