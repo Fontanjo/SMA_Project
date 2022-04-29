@@ -38,20 +38,42 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500, nb_ba
         start = np.random.randint(len(indices_full[0]) - nb_batch)
         indices = [indices_full[0][start:start+nb_batch], indices_full[1][start:start+nb_batch]]
         for i,j in tqdm(zip(indices[0], indices[1])):
-            for k in range(K):
-                # Computing the partial derivative w.r.t. U
-                dU = -(R[i,j] - np.sum([U[i,k] * V[j,k] for k in range(K)]))*V[j,k] + lambda_*U[i,k]
-                # Computing the partial derivative w.r.t. V
-                dV = -(R[i,j] - np.sum([U[i,k] * V[j,k] for k in range(K)]))*U[i,k] + lambda_*V[j,k]
-                # Update U
-                U[i,k] -=  alpha * dU
-                # Update V
-                V[j,k] -= alpha * dV
+            if not np.isnan(R[i,j]):
+                for k in range(K):
+                    # Computing the partial derivative w.r.t. U
+                    e1 = R[i,j]
+                    e2 = np.sum([U[i,k] * V[j,k] for k in range(K)])
+                    e3 = V[j,k]
+                    e4 = U[i,k]
+                    dU = -(e1 - e2) * e3 + lambda_*e4
+                    # dU = -(R[i,j] - np.sum([U[i,k] * V[j,k] for k in range(K)]))*V[j,k] + lambda_*U[i,k]
+                    if np.isnan(e1):
+                        print('e1 is NaN')
+                        return
+                    if np.isnan(e2):
+                        print('e2 is NaN')
+                        return
+                    if np.isnan(e3):
+                        print('e3 is NaN')
+                        return
+                    if np.isnan(e4):
+                        print('e4 is NaN')
+                        return
+                    # Computing the partial derivative w.r.t. V
+                    dV = -(R[i,j] - np.sum([U[i,k] * V[j,k] for k in range(K)]))*U[i,k] + lambda_*V[j,k]
+                    if np.isnan(dV):
+                        print('dV is NaN')
+                        return
+                    # Update U
+                    U[i,k] -=  alpha * dU
+                    # Update V
+                    V[j,k] -= alpha * dV
 
 
         error = 0
         for i,j in tqdm(zip(indices[0], indices[1])):
-            error += 0.5*(R[i,j] - np.dot(U[i,:], V[j,:].T))**2  + np.linalg.norm(U)*(lambda_/2) + np.linalg.norm(V)*(lambda_/2)
+            if not np.isnan(R[i,j]):
+                error += 0.5*(R[i,j] - np.dot(U[i,:], V[j,:].T))**2  + np.linalg.norm(U)*(lambda_/2) + np.linalg.norm(V)*(lambda_/2)
 
         print(error)
         average_error = error / len(indices[0])
