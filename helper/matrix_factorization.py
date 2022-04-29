@@ -8,7 +8,7 @@ from tqdm import tqdm
 # PROBLEM: Sometime, U and V starts containing NaN after a while... No idea why
 
 
-def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500, nb_batch=100000):
+def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_batch=100000, plot_name='fig.png', save_results=False):
     """
     :param R: user(row)-item(column) matrix. R similar to UxV^T
     :param K: number of features
@@ -33,10 +33,15 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500, nb_ba
     indices_full = R.nonzero()
 
 
+
+
     for current_iter in range(max_iter):
-        # Consider only a part
-        start = np.random.randint(len(indices_full[0]) - nb_batch)
-        indices = [indices_full[0][start:start+nb_batch], indices_full[1][start:start+nb_batch]]
+        if nb_batch != 'all':
+            # Consider only a part
+            start = np.random.randint(len(indices_full[0]) - nb_batch)
+            indices = [indices_full[0][start:start+nb_batch], indices_full[1][start:start+nb_batch]]
+        else:
+            indices = indices_full
         for i,j in tqdm(zip(indices[0], indices[1])):
             if not np.isnan(R[i,j]):
                 for k in range(K):
@@ -67,7 +72,11 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter=500, nb_ba
     plt.xlabel('Iterations')
     plt.ylabel('Average error')
     plt.legend()
-    plt.show()
+    plt.savefig(plot_name)
+
+    if save_results:
+        np.save('U.npy', U)
+        np.save('V.npy', V)
 
     # return
     return U, V
