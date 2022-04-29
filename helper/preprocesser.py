@@ -9,13 +9,17 @@ from tqdm import tqdm
 
 
 # Preprocess the ratings dataframe
-#   - Remove users with less than N ratings
-#   - TODO Remove outliers users
-def preprocess_ratings(ratings : pd.DataFrame, lists : pd.DataFrame, min_ratings : int) -> (pd.DataFrame, pd.DataFrame):
+# First remove movies with less than N1 ratings, then remove users that rated less than N2 movies
+# As consequences, there will be movies with less that N1 ratings after removing user
+def preprocess_ratings(ratings : pd.DataFrame, lists : pd.DataFrame, min_ratings_user : int=1, min_ratings_movie : int=1) -> (pd.DataFrame, pd.DataFrame):
     # Get the users to keep
-    users_to_keep = more_than_N_ratings(ratings, min_ratings - 1)
+    movies_to_keep = more_than_N_ratings_movie(ratings, min_ratings_movie - 1)
     # Keep only ratings of useful users
-    ratings_filtered = ratings[ratings['user_id'].isin(users_to_keep)]
+    ratings_filtered_m = ratings[ratings['movie_id'].isin(movies_to_keep)]
+    # Get the users to keep
+    users_to_keep = more_than_N_ratings_user(ratings_filtered_m, min_ratings_user - 1)
+    # Keep only ratings of useful users
+    ratings_filtered = ratings_filtered_m[ratings_filtered_m['user_id'].isin(users_to_keep)]
     # Keep only lists of useful users
     lists_filtered = lists[lists['user_id'].isin(users_to_keep)]
     # Return new DataFrames
@@ -23,13 +27,22 @@ def preprocess_ratings(ratings : pd.DataFrame, lists : pd.DataFrame, min_ratings
 
 
 # Get the users that rated at least n-1 movies
-def more_than_N_ratings(ratings : pd.DataFrame, n : int) -> list:
+def more_than_N_ratings_user(ratings : pd.DataFrame, n : int) -> list:
     # Get the users with more than n ratings
     has_more = ratings.groupby('user_id')['user_id'].count() > n
     # Select the users to keep
     users_to_keep = has_more[has_more].index
     # Return list of users to keep
     return users_to_keep
+
+# Get the movies that have at least n-1 ratings
+def more_than_N_ratings_movie(ratings : pd.DataFrame, n : int) -> list:
+    # Get the users with more than n ratings
+    has_more = ratings.groupby('movie_id')['movie_id'].count() > n
+    # Select the users to keep
+    movies_to_keep = has_more[has_more].index
+    # Return list of users to keep
+    return movies_to_keep
 
 
 # Create a (random) name for each user id
