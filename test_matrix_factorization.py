@@ -3,10 +3,11 @@ from helper.preprocesser import preprocess_ratings
 import helper.collaborative as coll
 from scipy.sparse import csr_matrix
 from helper.preprocesser import prepare_test_data_dense, prepare_test_data_sparse
-from helper.matrix_factorization import matrix_factorization
+from helper.matrix_factorization_faster import matrix_factorization
 import pandas as pd
 import numpy as np
 import argparse
+import time
 
 
 def main(args):
@@ -33,7 +34,9 @@ def main(args):
     save_results = True if args.save_results == 'True' else False
 
     # Factorize (or try at least..) matrix
+    start = time.time()
     matrix_factorization(R=sparse_user_item, K=K, alpha=alpha, lambda_=lambda_, max_iter=max_iter, nb_batch=nb_batch, plot_name=plot_name, save_results=save_results)
+    print(f'factorization time: {time.time() - start}')
 
 
 if __name__ == "__main__":
