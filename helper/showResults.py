@@ -4,35 +4,21 @@ from PIL import ImageTk
 from urllib.request import urlopen
 
 
-#Open a window presenting the movies whose ID are given in the list : rank, title, year, picture
-#list should be a list of integers corresponding to the ID of the movies, ranked in preference order (first is the best)
+#Open a window presenting the movies whose ID are given in the list : rank, title, year, predicted ranking, picture
 
 
-def showResults(list):
-    recommanded = [0,0,0,0,0]
-    doc = pd.read_parquet("mubi_movie_data.parquet")
-    doc = doc.to_dict(orient='records')
-    for row in doc:
-        if len(list) >= 1 and row["movie_id"] == list[0]:
-            recommanded[0] = row
-        if len(list) >= 2 and row["movie_id"] == list[1]:
-            recommanded[1] = row
-        if len(list) >= 3 and row["movie_id"] == list[2]:
-            recommanded[2] = row
-        if len(list) >= 4 and row["movie_id"] == list[3]:
-            recommanded[3] = row
-        if len(list) >= 5 and row["movie_id"] == list[4]:
-            recommanded[4] = row
+def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
+    movie_data.set_index('movie_id')
+    recommanded_movies = recommandation.join(movie_data)
 
     results = tk.Tk()
     labels = []
     images = []
-    count = 1
-    for r in recommanded:
+    for count in range(1, 6):
         if r != 0:
-            labels.append(tk.Label(results, text=str(count) + ". " + r["movie_title"] + "\n" + str(int(float(r["movie_release_year"])))))
-            count = count + 1
-            URL = r["movie_image_url"]
+            presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(int(float(recommanded_movies.iloc[count-1]["prediction"])))
+            labels.append(tk.Label(results, text=presentation_text))
+            URL = recommanded_movies.iloc[count-1]["movie_image_url"]
             u = urlopen(URL)
             raw_data = u.read()
             u.close()
