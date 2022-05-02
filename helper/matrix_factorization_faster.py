@@ -1,14 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 from multiprocessing import Pool
-
-
-
-def K_loop(R, U, V):
-    pass
-
-
+import time
 
 
 
@@ -21,6 +14,9 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
     :param lambda_: regularization term for U and V
     :return: feature matrices U and V
     """
+
+    # Record time used
+    start_time = time.time()
 
     nrows = R.shape[0]  # number of rows (users)
     ncolumns = R.shape[1]  # number of columns (items)
@@ -50,11 +46,13 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
                 # Update V
                 V[j,k] -= alpha * dV
 
+
     def evaluate(i, j):
         if not np.isnan(R[i,j]):
             return 0.5*(R[i,j] - np.dot(U[i], V[j].T))**2  + np.linalg.norm(U)*(lambda_/2) + np.linalg.norm(V)*(lambda_/2)
         else:
             return 0
+
 
     # Vectorize function (but no big improvement in performance)
     vu = np.vectorize(update)
@@ -81,7 +79,7 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
 
     # Plot error evolution
     plt.plot(range(len(errors)), errors, label='Error')
-    plt.title('Average error evolution')
+    plt.title(f'Average error evolution (time: {round(time.time() - start_time, 2)} seconds)')
     plt.xlabel('Iterations')
     plt.ylabel('Average error')
     plt.legend()
