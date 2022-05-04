@@ -2,10 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import Pool
 import time
+import os
+from datetime import datetime
 
 
 
-def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_batch=100000, plot_name='fig.png', save_results=False):
+def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_batch=100000, plot_name='fig.png', save_results=False, checkpoints_each=None):
     """
     :param R: user(row)-item(column) matrix. R similar to UxV^T
     :param K: number of features
@@ -32,6 +34,22 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
     # Get indices of elements
     indices_full = R.nonzero()
 
+    # Create chekcpoints folder
+    if checkpoints_each is not None or save_results:
+        date_and_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        # Create outer folder
+        if not os.path.exists('checkpoints'):
+            os.makedirs('checkpoints')
+        # Create a unique name for the checkpoints
+        date_and_time = date_and_time.replace(" ", "__")
+        date_and_time = date_and_time.replace(":", "-")
+        date_and_time = date_and_time.replace("/", "-")
+        date_and_time = date_and_time.replace(".", "-")
+        checkpoints_folder = f'checkpoints/{date_and_time}'
+        print(checkpoints_folder)
+        # Create execution folder
+        if not os.path.exists(checkpoints_folder):
+            os.makedirs(checkpoints_folder)
 
     def update(i, j):
         if not np.isnan(R[i,j]):
@@ -76,18 +94,34 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
         print(f"Avg. error: {round(average_error, 5)} (it {current_iter+1}/{max_iter})")
         errors.append(average_error)
 
+        if checkpoints_each is not None and ((current_iter + 1) % checkpoints_each == 0):
+            np.save(f'{checkpoints_folder}/U_{current_iter + 1}.npy', U)
+            np.save(f'{checkpoints_folder}/V_{current_iter + 1}.npy', V)
+
+
+    execution_time = round(time.time() - start_time, 2)
 
     # Plot error evolution
     plt.plot(range(len(errors)), errors, label='Error')
-    plt.title(f'Average error evolution (time: {round(time.time() - start_time, 2)} seconds)')
+    plt.title(f'Average error evolution (time: {execution_time} seconds)')
     plt.xlabel('Iterations')
     plt.ylabel('Average error')
     plt.legend()
-    plt.savefig(plot_name)
+    plt.savefig(f'{checkpoints_folder}/{plot_name}')
 
     if save_results:
-        np.save('U.npy', U)
-        np.save('V.npy', V)
+        # Save matrices
+        np.save(f'{checkpoints_folder}/U.npy', U)
+        np.save(f'{checkpoints_folder}/V.npy', V)
+        # Save parameters
+        lines = [f'K = {K}\n',
+                 f'Alpha = {alpha}\n',
+                 f'Lambda = {lambda_}\n',
+                 f'Max_iter = {max_iter}\n',
+                 f'Nb_batch = {nb_batch}\n',
+                 f'Execution time = {execution_time} seconds']
+        with open(f'{checkpoints_folder}/parameters.txt', 'w') as f:
+            f.writelines(lines)
 
     # return
     return U, V

@@ -29,13 +29,14 @@ def main(args):
     alpha = args.alpha
     lambda_ = args.lambda_
     max_iter = int(args.max_iter)
-    nb_batch = args.nb_batch if args.nb_batch > 0 else 'all'
+    nb_batch = args.batch_size if args.batch_size > 0 else 'all'
     plot_name = args.plot_name
     save_results = True if args.save_results == 'True' else False
+    checkpoints_each = args.checkpoints_each
 
     # Factorize (or try at least..) matrix
     start = time.time()
-    matrix_factorization(R=sparse_user_item, K=K, alpha=alpha, lambda_=lambda_, max_iter=max_iter, nb_batch=nb_batch, plot_name=plot_name, save_results=save_results)
+    matrix_factorization(R=sparse_user_item, K=K, alpha=alpha, lambda_=lambda_, max_iter=max_iter, nb_batch=nb_batch, plot_name=plot_name, save_results=save_results, checkpoints_each=checkpoints_each)
     print(f'factorization time: {time.time() - start}')
 
 
@@ -46,8 +47,9 @@ if __name__ == "__main__":
     parser.add_argument('--alpha', type=float, default=0.002, help='The learning rate')
     parser.add_argument('--lambda_', type=float, default=0.02, help='Parameters for the partial derivatives')
     parser.add_argument('--max_iter', type=int, default=10, help='Number of epochs')
-    parser.add_argument('--nb_batch', type=int, default=10000, help='Number of items to consider for each epoch. Use -1 for all')
+    parser.add_argument('--batch_size', type=int, default=10000, help='Number of items to consider for each epoch. Use -1 for all')
     parser.add_argument('--plot_name', type=str, default='fig.png', help='Name of the file with the error evolution')
     parser.add_argument('--save_results', type=str, default='True', help='Whether to save U and V on file')
+    parser.add_argument('--checkpoints_each', type=int, default=None, help='After how many epochs write a checkpoint. By default, do not write any')
     args = parser.parse_args()
     main(args)

@@ -8,3 +8,6 @@
 .ipynb_checkpoints/
 
 helper/__pycache__
+
+# Ignore matrix factorization checkpoints
+checkpoints/
