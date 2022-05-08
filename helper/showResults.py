@@ -16,19 +16,18 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
     labels = []
     images = []
     for count in range(1, 6):
-        if r != 0:
-            presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(int(float(recommanded_movies.iloc[count-1]["prediction"])))
-            labels.append(tk.Label(results, text=presentation_text))
-            URL = recommanded_movies.iloc[count-1]["movie_image_url"]
-            u = urlopen(URL)
-            raw_data = u.read()
-            u.close()
+        presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(int(float(recommanded_movies.iloc[count-1]["prediction"])))
+        labels.append(tk.Label(results, text=presentation_text))
+        URL = recommanded_movies.iloc[count-1]["movie_image_url"]
+        u = urlopen(URL)
+        raw_data = u.read()
+        u.close()
 
-            photo = ImageTk.PhotoImage(master=results, data=raw_data)
-            photo = photo._PhotoImage__photo.subsample(5)
+        photo = ImageTk.PhotoImage(master=results, data=raw_data)
+        photo = photo._PhotoImage__photo.subsample(5)
 
-            images.append(tk.Label(results, image=photo))
-            images[len(images)-1].image = photo
+        images.append(tk.Label(results, image=photo))
+        images[len(images)-1].image = photo
     count = 0
     for l in labels:
         l.grid(row=count, column=0)
