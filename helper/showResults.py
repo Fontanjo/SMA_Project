@@ -11,7 +11,8 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
     movie_data.set_index('movie_id')
     recommanded_movies = recommandation.join(movie_data)
 
-    results = tk.Tk()
+    results = tk.Toplevel()
+    results.title("Recommandation")
     labels = []
     images = []
     for count in range(1, 6):
@@ -23,10 +24,10 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
             raw_data = u.read()
             u.close()
 
-            photo = ImageTk.PhotoImage(data=raw_data)
+            photo = ImageTk.PhotoImage(master=results, data=raw_data)
             photo = photo._PhotoImage__photo.subsample(5)
 
-            images.append(tk.Label(image=photo))
+            images.append(tk.Label(results, image=photo))
             images[len(images)-1].image = photo
     count = 0
     for l in labels:
