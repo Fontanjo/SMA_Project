@@ -81,3 +81,24 @@ def load_corr() -> pd.DataFrame:
     os.chdir(current_wd)
     # Return DataFrame
     return corr_data
+
+def load_500_1000_corr() -> pd.DataFrame:
+    # Save current working directory to restore at the end (TODO check if necessary)
+    current_wd = os.getcwd()
+    # Move working directory tho this file location
+    try:
+        abspath = os.path.abspath(__file__)
+        dname = os.path.dirname(abspath)
+        os.chdir(dname)
+    except Exception as e:
+        print('Error in changing working directory, data might not be loaded correctly')
+    # Load data
+    corr_0 = pd.read_parquet('../data/small_user_user_0.parquet')
+    corr_1 = pd.read_parquet('../data/small_user_user_1.parquet')
+    
+
+    corr_data = pd.concat([corr_0,corr_1])
+    # Restore original working directory
+    os.chdir(current_wd)
+    # Return DataFrame
+    return corr_data

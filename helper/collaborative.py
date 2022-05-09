@@ -142,6 +142,20 @@ def get_k_popularity(popularity : pd.DataFrame, k_similar : pd.DataFrame) -> pd.
     return norm_popu.transpose()
 
 
+# Given the general popularity matrix, return the K most popular user, with their popularity normalized
+def get_top_k_popularity(popularity : pd.DataFrame, K : int) -> pd.DataFrame:
+
+    k_popu = popularity.nlargest(K,"popularity")
+
+    # Normalize only across the neighboorhod
+    # So our most popular friend will always be 1, even if really low in the general setting
+
+    norm_popu = ((k_popu-k_popu.min())/(k_popu.max()-k_popu.min())).fillna(0)
+
+
+    return norm_popu.transpose()
+
+
 #####################################
 # Recommendation 
 #####################################
@@ -355,3 +369,24 @@ def hybdrid_RS(user : int, user_item_matrix : pd.DataFrame, popu_matrix : pd.Dat
 
     return recommendation
 
+
+# "Trending now" get a recommendation for a user based on the most popular peoples only (the same for all users)
+def trending_RS(user : int, user_item_matrix : pd.DataFrame, popu_matrix : pd.DataFrame, neighboor_size = 50, top_K = 5,norm = False) -> np.array:
+
+    
+    popularity = get_top_k_popularity(popu_matrix,neighboor_size)
+    
+    weights = popularity
+
+    average_ratings = compute_average_ratings(user_item_matrix)
+
+    all_pred = predict_all(user,weights,user_item_matrix,average_ratings,norm)
+
+    pred = pd.DataFrame(all_pred[:,1],index=all_pred[:,0])
+    
+    recommendation = pred.nlargest(top_K,columns=0)
+    
+    recommendation.rename(columns={0:"prediction"},inplace=True)
+    recommendation.index = recommendation.index.astype(int)
+
+    return recommendation

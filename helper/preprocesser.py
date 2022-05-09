@@ -50,7 +50,12 @@ def create_fake_identities(ids : list):
     # Object to generate fake elements
     fake = Faker()
     # Generate dictionary matching ids to (fake) names
-    dir = {id: fake.name() for id in ids}
+    
+    # Vincent: I'm inversing this because I think it makes more sense as the input will be a name -> get id, not the opposite, 
+    # which is not practical with dic
+
+    #dir = {id: fake.name() for id in ids}
+    dir = {fake.name() : id for id in ids}
     # Return the new dictionary
     return dir
 
