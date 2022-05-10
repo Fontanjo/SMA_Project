@@ -42,26 +42,25 @@ def application():
         #select the right algorithm according to the selected value in the listbox and print the page
         if value == "Classic RS":
             error_text.set("")
-            recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=5, norm=True)
-            recomm_classic.transpose()
+            recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
+
             show.showResults(recomm_classic, movies)
         elif value == "Hybrid RS":
             error_text.set("")
-            recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=5,
+            recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                       norm=True)
-            recomm_hybdrid.transpose()
+
             show.showResults(recomm_hybdrid, movies)
         elif value == "Popularity RS":
             error_text.set("")
-            recomm_pop = collaborative.popularity_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=5,
+            recomm_pop = collaborative.popularity_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
-            recomm_pop.transpose()
+
             show.showResults(recomm_pop, movies)
         elif value == "Trending Now!":
             error_text.set("")
-            recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=5,
+            recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
-            recomm_trending.transpose()
             show.showResults(recomm_trending, movies)
 
     #Loading, preprocessing
