@@ -8,6 +8,7 @@ from urllib.request import urlopen
 
 
 def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
+    showed_results = 10 #this number can be changed and the displayer will adapt
     movie_data.set_index('movie_id')
     recommanded_movies = recommandation.join(movie_data)
 
@@ -15,7 +16,7 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
     results.title("Recommandation")
     labels = []
     images = []
-    for count in range(1, 6):
+    for count in range(1, showed_results + 1):
         presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(int(float(recommanded_movies.iloc[count-1]["prediction"])))
         labels.append(tk.Label(results, text=presentation_text))
         URL = recommanded_movies.iloc[count-1]["movie_image_url"]
@@ -28,13 +29,23 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
 
         images.append(tk.Label(results, image=photo))
         images[len(images)-1].image = photo
-    count = 0
+        
+    count_row = 0
+    count_column = 0
     for l in labels:
-        l.grid(row=count, column=0)
-        count = count+1
-    count = 0
+        l.grid(row=count_row, column=count_column)
+        count_row = count_row+1
+        if count_row == 5:
+            count_column = count_column + 2
+            count_row = 0
+            
+    count_row = 0
+    count_column = 1
     for i in images:
-        i.grid(row=count, column=1, pady=2)
-        count = count+1
+        i.grid(row=count_row, column=count_column, pady=2)
+        count_row = count_row + 1
+        if count_row == 5:
+            count_column = count_column + 2
+            count_row = 0
 
     tk.mainloop()
