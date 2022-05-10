@@ -56,6 +56,12 @@ def create_fake_identities(ids : list):
 
     #dir = {id: fake.name() for id in ids}
     dir = {fake.name() : id for id in ids}
+
+    #Add three name that we can always ask
+    dir["Carrel Vincent"] = dir.pop(list(dir.keys())[1])
+    dir["Corpataux Marine"] = dir.pop(list(dir.keys())[2])
+    dir["Fontana Jonas"] = dir.pop(list(dir.keys())[3])
+
     # Return the new dictionary
     return dir
 
