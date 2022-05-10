@@ -206,14 +206,16 @@ def predict_value_norm(user : int, item : int, weights : pd.DataFrame, user_item
 
     bottom = sum_down_norm(item,weights,user_item_matrix)
 
-    if bottom == 0:
+    pred = (average_user + (top/bottom)) if abs(bottom) > 0.00001 else np.nan
+    
+    if np.isnan(pred):
 
         #print("Warning: no prediction possible, try to increase K to have more overlap")
         return average_user
 
     else: 
         
-        return min((average_user + (top/bottom)),5)
+        return np.clip(pred,0,5)
 
 #### Now the formula without normalization
 
@@ -253,14 +255,16 @@ def predict_value(user : int, item : int, weights : pd.DataFrame, user_item_matr
 
     bottom = sum_down(item,weights,user_item_matrix)
 
-    if bottom == 0:
+    pred = top/bottom if abs(bottom) > 0.00001 else np.nan
+    
+    if np.isnan(pred):
 
         #print("Warning: no prediction possible, try to increase K to have more overlap")
         return average_user
 
     else: 
         
-        return min((top/bottom),5)
+        return np.clip(pred,0,5)
 
 # Return the prediction for all the missing movie for a given user
 
