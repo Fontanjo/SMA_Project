@@ -22,8 +22,9 @@ def main(args):
 
 
     # Get (sparse) matrix
-    sparse_user_item, _, _ = coll.get_sparse_user_item(ratings_new)
+    sparse_user_item, u_list, i_list = coll.get_sparse_user_item(ratings_new)
     print('User-Item matrix created')
+
 
     K = int(args.K)
     alpha = args.alpha
@@ -36,7 +37,7 @@ def main(args):
 
     # Factorize (or try at least..) matrix
     start = time.time()
-    matrix_factorization(R=sparse_user_item, K=K, alpha=alpha, lambda_=lambda_, max_iter=max_iter, nb_batch=nb_batch, plot_name=plot_name, save_results=save_results, checkpoints_each=checkpoints_each)
+    matrix_factorization(R=sparse_user_item, K=K, alpha=alpha, lambda_=lambda_, max_iter=max_iter, nb_batch=nb_batch, plot_name=plot_name, save_results=save_results, checkpoints_each=checkpoints_each, u_list=u_list, i_list=i_list)
     print(f'factorization time: {time.time() - start}')
 
 

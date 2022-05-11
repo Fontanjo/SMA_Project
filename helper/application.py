@@ -3,12 +3,14 @@ import helper.collaborative as collaborative
 import helper.loader as loader
 import helper.preprocesser as preprocesser
 import helper.showResults as show
+import helper.matrix_factorization_faster as matrix_factorization
+import numpy as np
 
 #IF YOU WANT TO TEST APPLICATION, YOU CAN USE USER ID 2941
 
 def application():
-    
-    
+
+
     #definition of the function happening when "Submit" button is hit
     def algorithm():
 
@@ -34,13 +36,14 @@ def application():
         index = selection[0]
         value = type.get(index)
 
-        #Show error if Matric RS is requested
+        # Select the right algorithm according to the selected value in the listbox and print the page
         if value == "Matrix RS":
-            error_text.set("Matrix RS algorithm isn't working yet")
-            return
+            error_text.set("")
+            recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, top_K=10)
 
-        #select the right algorithm according to the selected value in the listbox and print the page
-        if value == "Classic RS":
+            show.showResults(recomm_matrix, movies)
+
+        elif value == "Classic RS":
             error_text.set("")
             recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
 
@@ -102,13 +105,13 @@ def application():
     b2.grid(row=5, column=1)
 
     #Insert texts
-    entry.insert(tk.END, "Name (example: " + list(dict_of_name.keys())[0] + " )")
+    entry.insert(tk.END, "Name (example: " + list(dict_of_name.keys())[np.random.randint(50)] + " )")
 
     type.insert(tk.END, "Trending Now!")
     type.insert(tk.END, "Classic RS")
     type.insert(tk.END, "Hybrid RS")
     type.insert(tk.END, "Popularity RS")
     type.insert(tk.END, "Matrix RS")
-    
+
     #show window
     tk.mainloop()

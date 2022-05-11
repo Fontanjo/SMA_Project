@@ -4,10 +4,53 @@ from multiprocessing import Pool
 import time
 import os
 from datetime import datetime
+import pandas as pd
 
 
+def matrix_factorization_precomputed(user, top_K=10):
+    # Load U and V matrix
+    U = np.load('data/MatrixFactorization/U_20.npy')
+    V = np.load('data/MatrixFactorization/V_20.npy')
 
-def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_batch=100000, plot_name='fig.png', save_results=False, checkpoints_each=None):
+    # Load reference to users and items (movies)
+    u_list = np.load('data/MatrixFactorization/u_list.npy')
+    i_list = np.load('data/MatrixFactorization/i_list.npy')
+
+    # Get index of user
+    user_index = u_list.tolist().index(user)
+    # print(user)
+    # print(user_index)
+    # print(u_list)
+
+    if user_index is None:
+        print('User not in matrix database')
+        return []
+
+    # Predict values
+    predictions = U[user_index,:].dot(V.T)
+
+    # Get index (in UxVt) of bests
+    recommendation = pd.DataFrame(predictions).nlargest(top_K, columns=0)
+    index_largest = recommendation.index
+
+    # Retrive original indices
+    indices = []
+    for i in index_largest:
+        # if not i_list[i] in list(m.loc[:,'movie_id']):
+        #      print(f'm does not contain {i_list[i]}')
+        # else:
+        #     print(f'm contains {i_list[i]}!')
+        indices.append(i_list[i])
+
+    # Uniform pandas df
+    recommendation.rename(columns={0:"prediction"},inplace=True)
+    recommendation.index = indices
+    recommendation.index = recommendation.index.astype(int)
+
+    return recommendation
+
+
+def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_batch=100000, plot_name='fig.png', save_results=False, checkpoints_each=None, u_list=None, i_list=None):
     """
     :param R: user(row)-item(column) matrix. R similar to UxV^T
     :param K: number of features
@@ -50,6 +93,12 @@ def matrix_factorization(R, K=10, alpha=0.002, lambda_=0.02, max_iter='all', nb_
         # Create execution folder
         if not os.path.exists(checkpoints_folder):
             os.makedirs(checkpoints_folder)
+
+        # Save user list and item list
+        if checkpoints_each is not None:
+            if u_list is not None: np.save(f'{checkpoints_folder}/u_list.npy', u_list)
+            if i_list is not None: np.save(f'{checkpoints_folder}/i_list.npy', i_list)
+
 
     def update(i, j):
         if not np.isnan(R[i,j]):
