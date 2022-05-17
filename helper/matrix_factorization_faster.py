@@ -7,7 +7,7 @@ from datetime import datetime
 import pandas as pd
 
 
-def matrix_factorization_precomputed(user, top_K=10):
+def matrix_factorization_precomputed(user, user_ratings, top_K=10):
     # Load U and V matrix
     U = np.load('data/MatrixFactorization/U_20.npy')
     V = np.load('data/MatrixFactorization/V_20.npy')

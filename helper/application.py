@@ -39,7 +39,7 @@ def application():
         # Select the right algorithm according to the selected value in the listbox and print the page
         if value == "Matrix RS":
             error_text.set("")
-            recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, top_K=10)
+            recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
 
             show.showResults(recomm_matrix, movies)
 
