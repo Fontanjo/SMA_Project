@@ -9,8 +9,9 @@ from urllib.request import urlopen
 
 def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
     showed_results = 10 #this number can be changed and the displayer will adapt
-    movie_data.set_index('movie_id',inplace=True, drop=True)
-    recommanded_movies = recommandation.join(movie_data)
+    movies = movie_data.copy()
+    movies.set_index('movie_id',inplace=True, drop=True)
+    recommanded_movies = recommandation.join(movies)
 
     results = tk.Toplevel()
     results.title("Recommandation")
