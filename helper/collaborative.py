@@ -322,7 +322,7 @@ def classic_RS(user : int, user_item_matrix : pd.DataFrame, neighboor_size = 50,
     recommendation.rename(columns={0:"prediction"},inplace=True)
     recommendation.index = recommendation.index.astype(int)
 
-    return recommendation
+    return recommendation, similarity
 
 
 # Popularity RS, the weights only considere the popularity of the similar users
@@ -346,7 +346,7 @@ def popularity_RS(user : int, user_item_matrix : pd.DataFrame, popu_matrix : pd.
     recommendation.rename(columns={0:"prediction"},inplace=True)
     recommendation.index = recommendation.index.astype(int)
 
-    return recommendation
+    return recommendation, popularity
 
 # Hybrid RS , the weights are the sum of both the users popularity and similarity
 
@@ -371,7 +371,7 @@ def hybdrid_RS(user : int, user_item_matrix : pd.DataFrame, popu_matrix : pd.Dat
     recommendation.rename(columns={0:"prediction"},inplace=True)
     recommendation.index = recommendation.index.astype(int)
 
-    return recommendation
+    return recommendation, hybdrid
 
 
 # "Trending now" get a recommendation for a user based on the most popular peoples only (the same for all users)
@@ -393,4 +393,4 @@ def trending_RS(user : int, user_item_matrix : pd.DataFrame, popu_matrix : pd.Da
     recommendation.rename(columns={0:"prediction"},inplace=True)
     recommendation.index = recommendation.index.astype(int)
 
-    return recommendation
+    return recommendation, popularity
