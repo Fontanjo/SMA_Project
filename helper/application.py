@@ -7,8 +7,6 @@ import helper.showgraph as showG
 import helper.matrix_factorization_faster as matrix_factorization
 import numpy as np
 
-#IF YOU WANT TO TEST APPLICATION, YOU CAN USE USER ID 2941
-
 def application():
 
 
@@ -41,14 +39,17 @@ def application():
         if value == "Matrix RS":
             error_text.set("")
             recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
-
+        if var.get() == 2:
+            error_text.set("Graph reprenstation is not available for Matrix yet")
+            #showG.showgraph(ratings, recomm_matrix, movies.copy())
+        else:
             showR.showResults(recomm_matrix, movies.copy())
 
         elif value == "Classic RS":
             error_text.set("")
             recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_classic.copy(), movies.copy()
+                showG.showgraph(ratings, recomm_classic, movies.copy())
             else:
                 showR.showResults(recomm_classic[0].copy(), movies.copy())
                 
@@ -57,7 +58,7 @@ def application():
             recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                       norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_hybdrid.copy(), movies.copy()
+                showG.showgraph(ratings, recomm_hybdrid, movies.copy())
             else:
                 showR.showResults(recomm_hybdrid[0].copy(), movies.copy())
                                     
@@ -67,7 +68,7 @@ def application():
                                                      norm=True)
 
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_pop.copy(), movies.copy()
+                showG.showgraph(ratings, recomm_pop, movies.copy())
             else:
                 showR.showResults(recomm_pop[0].copy(), movies.copy())
                                     
@@ -76,7 +77,7 @@ def application():
             recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_trending.copy(), movies.copy()
+                showG.showgraph(ratings, recomm_trending, movies.copy())
             else:
                 showR.showResults(recomm_trending[0].copy(), movies.copy())
                                     
