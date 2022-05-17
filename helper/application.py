@@ -40,27 +40,26 @@ def application():
             error_text.set("")
             recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
         if var.get() == 2:
-            error_text.set("Graph reprenstation is not available for Matrix yet")
-            #showG.showgraph(ratings, recomm_matrix, movies.copy())
+            error_text.set("Can't have graph representation for Matrix RS!")
         else:
-            showR.showResults(recomm_matrix, movies.copy())
+            showR.showResults(recomm_matrix, movies)
 
         elif value == "Classic RS":
             error_text.set("")
             recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_classic, movies.copy())
+                showG.showgraph(ratings, recomm_classic, movies)
             else:
-                showR.showResults(recomm_classic[0].copy(), movies.copy())
+                showR.showResults(recomm_classic[0], movies)
                 
         elif value == "Hybrid RS":
             error_text.set("")
             recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                       norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_hybdrid, movies.copy())
+                showG.showgraph(ratings, recomm_hybdrid, movies)
             else:
-                showR.showResults(recomm_hybdrid[0].copy(), movies.copy())
+                showR.showResults(recomm_hybdrid[0], movies)
                                     
         elif value == "Popularity RS":
             error_text.set("")
@@ -68,18 +67,18 @@ def application():
                                                      norm=True)
 
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_pop, movies.copy())
+                showG.showgraph(ratings, recomm_pop, movies)
             else:
-                showR.showResults(recomm_pop[0].copy(), movies.copy())
+                showR.showResults(recomm_pop[0], movies)
                                     
         elif value == "Trending Now!":
             error_text.set("")
             recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
             if var.get() == 2:
-                showG.showgraph(ratings, recomm_trending, movies.copy())
+                showG.showgraph(ratings, recomm_trending, movies)
             else:
-                showR.showResults(recomm_trending[0].copy(), movies.copy())
+                showR.showResults(recomm_trending[0], movies)
                                     
 
     #Loading, preprocessing
