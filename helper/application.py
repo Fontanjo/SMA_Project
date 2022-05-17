@@ -2,7 +2,8 @@ import tkinter as tk
 import helper.collaborative as collaborative
 import helper.loader as loader
 import helper.preprocesser as preprocesser
-import helper.showResults as show
+import helper.showResults as showR
+import helper.showgraph as showG
 import helper.matrix_factorization_faster as matrix_factorization
 import numpy as np
 
@@ -41,30 +42,44 @@ def application():
             error_text.set("")
             recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
 
-            show.showResults(recomm_matrix, movies.copy())
+            showR.showResults(recomm_matrix, movies.copy())
 
         elif value == "Classic RS":
             error_text.set("")
             recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
-
-            show.showResults(recomm_classic, movies.copy())
+            if var.get() == 2:
+                showG.showgraph(ratings, recomm_classic.copy(), movies.copy()
+            else:
+                showR.showResults(recomm_classic[0].copy(), movies.copy())
+                
         elif value == "Hybrid RS":
             error_text.set("")
             recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                       norm=True)
-
-            show.showResults(recomm_hybdrid, movies.copy())
+            if var.get() == 2:
+                showG.showgraph(ratings, recomm_hybdrid.copy(), movies.copy()
+            else:
+                showR.showResults(recomm_hybdrid[0].copy(), movies.copy())
+                                    
         elif value == "Popularity RS":
             error_text.set("")
             recomm_pop = collaborative.popularity_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
 
-            show.showResults(recomm_pop, movies.copy())
+            if var.get() == 2:
+                showG.showgraph(ratings, recomm_pop.copy(), movies.copy()
+            else:
+                showR.showResults(recomm_pop[0].copy(), movies.copy())
+                                    
         elif value == "Trending Now!":
             error_text.set("")
             recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
-            show.showResults(recomm_trending, movies.copy())
+            if var.get() == 2:
+                showG.showgraph(ratings, recomm_trending.copy(), movies.copy()
+            else:
+                showR.showResults(recomm_trending[0].copy(), movies.copy())
+                                    
 
     #Loading, preprocessing
     ratings = loader.load_ratings()
@@ -89,6 +104,13 @@ def application():
     error = tk.Label(root, textvariable=error_text, fg="red", height=1, width=52)
     title = tk.Label(root, text="Who do you want a recommandation for?")
     title.config(font=("Courier", 14))
+    
+    #create box to get graph or table
+    var = tk.IntVar()
+    R1 = tk.Radiobutton(root, text="Table Visualisation", variable=var, value=1)
+    R1.select()
+    R2 = tk.Radiobutton(root, text="Graph Visualisation", variable=var, value=2)
+
 
     # Create button to submit
     b1 = tk.Button(root, text="Submit", width=30, command=algorithm)
@@ -100,9 +122,11 @@ def application():
     title.grid(row=1, columnspan=2)
     entry.grid(row=2, columnspan=2)
     type.grid(row=3, columnspan=2)
-    error.grid(row=4, columnspan=2)
-    b1.grid(row=5, column=0)
-    b2.grid(row=5, column=1)
+    R1.grid(row=4, column=0)
+    R2.grid(row=4, column=1)
+    error.grid(row=5, columnspan=2)
+    b1.grid(row=6, column=0)
+    b2.grid(row=6, column=1)
 
     #Insert texts
     entry.insert(tk.END, "Name (example: " + list(dict_of_name.keys())[np.random.randint(50)] + " )")
