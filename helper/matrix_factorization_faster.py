@@ -29,6 +29,12 @@ def matrix_factorization_precomputed(user, user_ratings, top_K=10):
     # Predict values
     predictions = U[user_index,:].dot(V.T)
 
+    # Remove movies already rated
+    # for i,v in user_ratings.items():
+    #     if not np.isnan(v):
+    #         index = list(i_list).index(i)
+    #         predictions[index] = -1
+
     # Get index (in UxVt) of bests
     recommendation = pd.DataFrame(predictions).nlargest(top_K, columns=0)
     index_largest = recommendation.index

@@ -41,30 +41,30 @@ def application():
             error_text.set("")
             recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
 
-            show.showResults(recomm_matrix, movies)
+            show.showResults(recomm_matrix, movies.copy())
 
         elif value == "Classic RS":
             error_text.set("")
             recomm_classic = collaborative.classic_RS(user, dense_user_item, neighboor_size=40, top_K=10, norm=True)
 
-            show.showResults(recomm_classic, movies)
+            show.showResults(recomm_classic, movies.copy())
         elif value == "Hybrid RS":
             error_text.set("")
             recomm_hybdrid = collaborative.hybdrid_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                       norm=True)
 
-            show.showResults(recomm_hybdrid, movies)
+            show.showResults(recomm_hybdrid, movies.copy())
         elif value == "Popularity RS":
             error_text.set("")
             recomm_pop = collaborative.popularity_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
 
-            show.showResults(recomm_pop, movies)
+            show.showResults(recomm_pop, movies.copy())
         elif value == "Trending Now!":
             error_text.set("")
             recomm_trending = collaborative.trending_RS(user, dense_user_item, popu_matrix, neighboor_size=40, top_K=10,
                                                      norm=True)
-            show.showResults(recomm_trending, movies)
+            show.showResults(recomm_trending, movies.copy())
 
     #Loading, preprocessing
     ratings = loader.load_ratings()
