@@ -18,7 +18,7 @@ def showResults(recommandation: pd.DataFrame, movie_data: pd.DataFrame):
     labels = []
     images = []
     for count in range(1, showed_results + 1):
-        presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(int(float(recommanded_movies.iloc[count-1]["prediction"])))
+        presentation_text = str(count) + ". " + recommanded_movies.iloc[count-1]["movie_title"] + "\n" + str(int(float(recommanded_movies.iloc[count-1]["movie_release_year"]))) + "\n" + "Predicted rating: " + str(round(float(recommanded_movies.iloc[count-1]["prediction"]),2))
         labels.append(tk.Label(results, text=presentation_text))
         URL = recommanded_movies.iloc[count-1]["movie_image_url"]
         u = urlopen(URL)
