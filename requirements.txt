@@ -1,0 +1,6 @@
+numpy==1.22
+matplotlib==3.5
+pandas==1.4
+tqdm==4.64
+Faker==13.11
+
