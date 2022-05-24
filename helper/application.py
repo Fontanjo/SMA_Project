@@ -39,10 +39,10 @@ def application():
         if value == "Matrix RS":
             error_text.set("")
             recomm_matrix = matrix_factorization.matrix_factorization_precomputed(user, dense_user_item.loc[user, :], top_K=10)
-        if var.get() == 2:
-            error_text.set("Can't have graph representation for Matrix RS!")
-        else:
-            showR.showResults(recomm_matrix, movies)
+            if var.get() == 2:
+                error_text.set("Can't have graph representation for Matrix RS!")
+            else:
+                showR.showResults(recomm_matrix, movies)
 
         elif value == "Classic RS":
             error_text.set("")
