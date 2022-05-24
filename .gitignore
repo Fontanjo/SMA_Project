@@ -11,3 +11,5 @@ helper/__pycache__
 
 # Ignore matrix factorization checkpoints
 checkpoints/
+
+tester.ipynb
