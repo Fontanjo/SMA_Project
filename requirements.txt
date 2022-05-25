@@ -3,4 +3,5 @@ matplotlib==3.5
 pandas==1.4
 tqdm==4.64
 Faker==13.11
-
+scipy==1.7
+networkx==2.6

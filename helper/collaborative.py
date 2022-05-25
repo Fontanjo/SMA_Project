@@ -6,7 +6,6 @@
 
 
 
-from xmlrpc.client import boolean
 import pandas as pd
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -271,7 +270,7 @@ def predict_value(user : int, item : int, weights : pd.DataFrame, user_item_matr
 # TODO: main bottleneck so far, to improve
 
 
-def predict_all(user : int, weights : pd.DataFrame, user_item_matrix : pd.DataFrame, average_ratings : pd.Series, norm : boolean) -> np.array:
+def predict_all(user : int, weights : pd.DataFrame, user_item_matrix : pd.DataFrame, average_ratings : pd.Series, norm : bool) -> np.array:
 
     #iterate over all missing ratings for a user, and for each, compute the prediction
     prediction = []
