@@ -4,4 +4,5 @@ pandas==1.4
 tqdm==4.64
 Faker==13.11
 scipy==1.7
-networkx==2.6
+networkx==2.64
+pyarrow==8.0
